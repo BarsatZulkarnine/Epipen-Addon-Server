@@ -9,8 +9,10 @@ const app = express();
 const port = process.env.PORT || 3000; // Use PORT from environment variables
 
 // Load Firebase credentials from environment variables
+const firebaseCredentials = JSON.parse(process.env.FIREBASE_CREDENTIALS);
+
 const firebaseConfig = {
-  credential: admin.credential.cert(require(process.env.FIREBASE_CREDENTIALS)),
+  credential: admin.credential.cert(firebaseCredentials),
   databaseURL: process.env.DATABASE_URL
 };
 
@@ -20,6 +22,11 @@ admin.initializeApp(firebaseConfig);
 const db = admin.firestore();
 
 app.use(bodyParser.json());
+
+// Root endpoint to check if the server is running
+app.get('/', (req, res) => {
+  res.send('The server is running successfully!');
+});
 
 // Endpoint to handle alert from ESP32 (GET and POST)
 app.post('/alert', handleAlert);
@@ -92,7 +99,7 @@ async function handleAlert(req, res) {
 // Function to format the summary as bullet points
 function formatAsBulletPoints(text) {
   // Split the text into lines
-  const lines = text.split('\n');
+  const lines = text.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
   // Format each line as a bullet point
   return lines.map(line => `• ${line}`).join('\n');
 }
