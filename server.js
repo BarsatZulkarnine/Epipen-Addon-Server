@@ -118,5 +118,5 @@ async function downloadAndExtractText(fileUrl) {
 }
 
 app.listen(port, () => {
-  console.log(`Backend server is running on http://localhost:${port}`);
+  console.log(`Backend server is running on  http://localhost:${port}`);
 });
