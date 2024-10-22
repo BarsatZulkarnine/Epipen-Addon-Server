@@ -1,0 +1,4 @@
+# .gitignore
+node_modules/
+.env
+epipen-addon-test-firebase-adminsdk-5vivd-b5054b348c.json
