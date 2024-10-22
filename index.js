@@ -75,11 +75,10 @@ async function handleAlert(req, res) {
         if (openaiResponse.data.choices && openaiResponse.data.choices.length > 0) {
           // Extract summary and format it as bullet points
           const summary = openaiResponse.data.choices[0].message.content.trim();
-          const formattedSummary = formatAsBulletPoints(summary);
 
           res.send({
             message: 'Data processed successfully',
-            summary: formattedSummary
+            summary: summary
           });
         } else {
           res.status(500).send({ error: 'Unexpected response structure from OpenAI.' });
@@ -97,12 +96,7 @@ async function handleAlert(req, res) {
 }
 
 // Function to format the summary as bullet points
-function formatAsBulletPoints(text) {
-  // Split the text into lines
-  const lines = text.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
-  // Format each line as a bullet point
-  return lines.map(line => `• ${line}`).join('\n');
-}
+
 
 // Function to download and extract text from the .docx file
 async function downloadAndExtractText(fileUrl) {
