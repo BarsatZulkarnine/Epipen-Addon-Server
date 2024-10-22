@@ -59,7 +59,7 @@ async function handleAlert(req, res) {
             model: 'gpt-3.5-turbo',
             messages: [
               { role: 'system', content: 'You are a helpful assistant.' },
-              { role: 'user', content: `Summarize this medical information in bullet points: ${fileContent}` },
+              { role: 'user', content: `Summarize this medical information in bullet points so that I can contact with Australian ER doctors: ${fileContent}` },
             ],
             max_tokens: 200
           },
