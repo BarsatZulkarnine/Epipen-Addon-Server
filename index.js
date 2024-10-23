@@ -27,7 +27,42 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('The server is running successfully!');
 });
+app.get('/fetchChatIds', async (req, res) => {
+  const BOT_TOKEN = process.env.BOT_TOKEN; // Ensure you set this in your .env file
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`;
 
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+
+    if (data.ok) {
+      const chatIds = new Set();  // Use a Set to avoid duplicates
+      const chatInfo = [];
+
+      for (const result of data.result) {
+        if (result.message) {
+          const chatId = result.message.chat.id;
+          const username = result.message.chat.username || result.message.chat.first_name || 'Unknown User';
+          
+          chatIds.add(chatId); // Add chat ID to the set
+          chatInfo.push({ chatId, username }); // Store chat ID and username
+        }
+      }
+
+      console.log('Unique Chat IDs:', chatIds);
+      res.json({
+        message: 'Chat IDs fetched successfully',
+        uniqueChatIds: [...chatIds], // Convert Set to array
+        chatInfo: chatInfo
+      });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch updates. Response:', data });
+    }
+  } catch (error) {
+    console.error('Error fetching chat IDs:', error);
+    res.status(500).json({ error: 'An error occurred while fetching chat IDs.' });
+  }
+});
 // Endpoint to handle alert from ESP32 (GET and POST)
 app.post('/alert', handleAlert);
 app.get('/alert', handleAlert);
